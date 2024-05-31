@@ -19,9 +19,9 @@
 
 模型训练的话，我是直接使用了以下两个仓库进行了训练：
 
-- [YOLOX]([GitHub - Megvii-BaseDetection/YOLOX: YOLOX is a high-performance anchor-free YOLO, exceeding yolov3~v5 with MegEngine, ONNX, TensorRT, ncnn, and OpenVINO supported. Documentation: https://yolox.readthedocs.io/](https://github.com/Megvii-BaseDetection/YOLOX.git))
+- [YOLOX](https://github.com/Megvii-BaseDetection/YOLOX.git))
   
-- [deeplabv3-plus-pytorch]([GitHub - bubbliiiing/deeplabv3-plus-pytorch: 这是一个deeplabv3-plus-pytorch的源码，可以用于训练自己的模型。](https://github.com/bubbliiiing/deeplabv3-plus-pytorch.git))
+- [deeplabv3-plus-pytorch](https://github.com/bubbliiiing/deeplabv3-plus-pytorch.git))
   
 
 训练好模型之后，使用仓库自带的转换脚本，可以将生成的权重转换成onnx格式。
@@ -40,16 +40,16 @@
 
 - [Yolov5-DeepLabV3Plus-MeterReader](https://github.com/xinglunancv/Yolov5-DeepLabV3Plus-MeterReader) (抄了指针读数的代码)
   
-- [MeterReader]([GitHub - zhuyushi/MeterReader: Using depth neural network to read traditional meter.](https://github.com/zhuyushi/MeterReader.git)) (抄了部分后处理的代码)
+- [MeterReader](https://github.com/zhuyushi/MeterReader.git)) (抄了部分后处理的代码)
   
-- [Person_Segmentation]([GitHub - runrunrun1994/Person_Segmentation: The inference implementation of the deeplabV3+ person segementation algorithm.](https://github.com/runrunrun1994/Person_Segmentation.git)) (抄了DeepLabV3Plus部分的ncnn处理代码)
+- [Person_Segmentation](https://github.com/runrunrun1994/Person_Segmentation.git)) (抄了DeepLabV3Plus部分的ncnn处理代码)
   
-- [ncnn]([ncnn/examples/yolox.cpp at master · Tencent/ncnn · GitHub](https://github.com/Tencent/ncnn/blob/master/examples/yolox.cpp)) (抄了YoloX的ncnn处理代码)
+- [ncnn](https://github.com/Tencent/ncnn/blob/master/examples/yolox.cpp)) (抄了YoloX的ncnn处理代码)
   
 
 对输入图像进行不失真的resize，感谢以下博客：
 
-[C++ - Yolo的letterbox图片预处理方法，缩放图片不失真]([C++ - Yolo的letterbox图片预处理方法，缩放图片不失真 - StubbornHuang Blog](https://www.stubbornhuang.com/2728/))
+[C++ - Yolo的letterbox图片预处理方法，缩放图片不失真](https://www.stubbornhuang.com/2728/))
 
 ## 合
 
