@@ -1,0 +1,93 @@
+7767517
+91 106
+Input                    images                   0 1 images
+Convolution              /backbone/features.0/features.0.0/Conv 1 1 images /backbone/features.0/features.0.2/Clip_output_0 0=32 1=3 3=2 4=1 5=1 6=864 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.1/conv/conv.0/Conv 1 1 /backbone/features.0/features.0.2/Clip_output_0 /backbone/features.1/conv/conv.2/Clip_output_0 0=32 1=3 4=1 5=1 6=288 7=32 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.1/conv/conv.3/Conv 1 1 /backbone/features.1/conv/conv.2/Clip_output_0 /backbone/features.1/conv/conv.3/Conv_output_0 0=16 1=1 5=1 6=512
+Convolution              /backbone/features.2/conv/conv.0/Conv 1 1 /backbone/features.1/conv/conv.3/Conv_output_0 /backbone/features.2/conv/conv.2/Clip_output_0 0=96 1=1 5=1 6=1536 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.2/conv/conv.3/Conv 1 1 /backbone/features.2/conv/conv.2/Clip_output_0 /backbone/features.2/conv/conv.5/Clip_output_0 0=96 1=3 3=2 4=1 5=1 6=864 7=96 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.2/conv/conv.6/Conv 1 1 /backbone/features.2/conv/conv.5/Clip_output_0 /backbone/features.2/conv/conv.6/Conv_output_0 0=24 1=1 5=1 6=2304
+Split                    splitncnn_0              1 2 /backbone/features.2/conv/conv.6/Conv_output_0 /backbone/features.2/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.2/conv/conv.6/Conv_output_0_splitncnn_1
+Convolution              /backbone/features.3/conv/conv.0/Conv 1 1 /backbone/features.2/conv/conv.6/Conv_output_0_splitncnn_1 /backbone/features.3/conv/conv.2/Clip_output_0 0=144 1=1 5=1 6=3456 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.3/conv/conv.3/Conv 1 1 /backbone/features.3/conv/conv.2/Clip_output_0 /backbone/features.3/conv/conv.5/Clip_output_0 0=144 1=3 4=1 5=1 6=1296 7=144 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.3/conv/conv.6/Conv 1 1 /backbone/features.3/conv/conv.5/Clip_output_0 /backbone/features.3/conv/conv.6/Conv_output_0 0=24 1=1 5=1 6=3456
+BinaryOp                 /backbone/features.3/Add 2 1 /backbone/features.2/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.3/conv/conv.6/Conv_output_0 /backbone/features.3/Add_output_0
+Split                    splitncnn_1              1 2 /backbone/features.3/Add_output_0 /backbone/features.3/Add_output_0_splitncnn_0 /backbone/features.3/Add_output_0_splitncnn_1
+Convolution              /backbone/features.4/conv/conv.0/Conv 1 1 /backbone/features.3/Add_output_0_splitncnn_1 /backbone/features.4/conv/conv.2/Clip_output_0 0=144 1=1 5=1 6=3456 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.4/conv/conv.3/Conv 1 1 /backbone/features.4/conv/conv.2/Clip_output_0 /backbone/features.4/conv/conv.5/Clip_output_0 0=144 1=3 3=2 4=1 5=1 6=1296 7=144 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.4/conv/conv.6/Conv 1 1 /backbone/features.4/conv/conv.5/Clip_output_0 /backbone/features.4/conv/conv.6/Conv_output_0 0=32 1=1 5=1 6=4608
+Split                    splitncnn_2              1 2 /backbone/features.4/conv/conv.6/Conv_output_0 /backbone/features.4/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.4/conv/conv.6/Conv_output_0_splitncnn_1
+Convolution              /backbone/features.5/conv/conv.0/Conv 1 1 /backbone/features.4/conv/conv.6/Conv_output_0_splitncnn_1 /backbone/features.5/conv/conv.2/Clip_output_0 0=192 1=1 5=1 6=6144 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.5/conv/conv.3/Conv 1 1 /backbone/features.5/conv/conv.2/Clip_output_0 /backbone/features.5/conv/conv.5/Clip_output_0 0=192 1=3 4=1 5=1 6=1728 7=192 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.5/conv/conv.6/Conv 1 1 /backbone/features.5/conv/conv.5/Clip_output_0 /backbone/features.5/conv/conv.6/Conv_output_0 0=32 1=1 5=1 6=6144
+BinaryOp                 /backbone/features.5/Add 2 1 /backbone/features.4/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.5/conv/conv.6/Conv_output_0 /backbone/features.5/Add_output_0
+Split                    splitncnn_3              1 2 /backbone/features.5/Add_output_0 /backbone/features.5/Add_output_0_splitncnn_0 /backbone/features.5/Add_output_0_splitncnn_1
+Convolution              /backbone/features.6/conv/conv.0/Conv 1 1 /backbone/features.5/Add_output_0_splitncnn_1 /backbone/features.6/conv/conv.2/Clip_output_0 0=192 1=1 5=1 6=6144 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.6/conv/conv.3/Conv 1 1 /backbone/features.6/conv/conv.2/Clip_output_0 /backbone/features.6/conv/conv.5/Clip_output_0 0=192 1=3 4=1 5=1 6=1728 7=192 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.6/conv/conv.6/Conv 1 1 /backbone/features.6/conv/conv.5/Clip_output_0 /backbone/features.6/conv/conv.6/Conv_output_0 0=32 1=1 5=1 6=6144
+BinaryOp                 /backbone/features.6/Add 2 1 /backbone/features.5/Add_output_0_splitncnn_0 /backbone/features.6/conv/conv.6/Conv_output_0 /backbone/features.6/Add_output_0
+Convolution              /backbone/features.7/conv/conv.0/Conv 1 1 /backbone/features.6/Add_output_0 /backbone/features.7/conv/conv.2/Clip_output_0 0=192 1=1 5=1 6=6144 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.7/conv/conv.3/Conv 1 1 /backbone/features.7/conv/conv.2/Clip_output_0 /backbone/features.7/conv/conv.5/Clip_output_0 0=192 1=3 4=1 5=1 6=1728 7=192 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.7/conv/conv.6/Conv 1 1 /backbone/features.7/conv/conv.5/Clip_output_0 /backbone/features.7/conv/conv.6/Conv_output_0 0=64 1=1 5=1 6=12288
+Split                    splitncnn_4              1 2 /backbone/features.7/conv/conv.6/Conv_output_0 /backbone/features.7/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.7/conv/conv.6/Conv_output_0_splitncnn_1
+Convolution              /backbone/features.8/conv/conv.0/Conv 1 1 /backbone/features.7/conv/conv.6/Conv_output_0_splitncnn_1 /backbone/features.8/conv/conv.2/Clip_output_0 0=384 1=1 5=1 6=24576 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.8/conv/conv.3/Conv 1 1 /backbone/features.8/conv/conv.2/Clip_output_0 /backbone/features.8/conv/conv.5/Clip_output_0 0=384 1=3 2=2 4=2 5=1 6=3456 7=384 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.8/conv/conv.6/Conv 1 1 /backbone/features.8/conv/conv.5/Clip_output_0 /backbone/features.8/conv/conv.6/Conv_output_0 0=64 1=1 5=1 6=24576
+BinaryOp                 /backbone/features.8/Add 2 1 /backbone/features.7/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.8/conv/conv.6/Conv_output_0 /backbone/features.8/Add_output_0
+Split                    splitncnn_5              1 2 /backbone/features.8/Add_output_0 /backbone/features.8/Add_output_0_splitncnn_0 /backbone/features.8/Add_output_0_splitncnn_1
+Convolution              /backbone/features.9/conv/conv.0/Conv 1 1 /backbone/features.8/Add_output_0_splitncnn_1 /backbone/features.9/conv/conv.2/Clip_output_0 0=384 1=1 5=1 6=24576 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.9/conv/conv.3/Conv 1 1 /backbone/features.9/conv/conv.2/Clip_output_0 /backbone/features.9/conv/conv.5/Clip_output_0 0=384 1=3 2=2 4=2 5=1 6=3456 7=384 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.9/conv/conv.6/Conv 1 1 /backbone/features.9/conv/conv.5/Clip_output_0 /backbone/features.9/conv/conv.6/Conv_output_0 0=64 1=1 5=1 6=24576
+BinaryOp                 /backbone/features.9/Add 2 1 /backbone/features.8/Add_output_0_splitncnn_0 /backbone/features.9/conv/conv.6/Conv_output_0 /backbone/features.9/Add_output_0
+Split                    splitncnn_6              1 2 /backbone/features.9/Add_output_0 /backbone/features.9/Add_output_0_splitncnn_0 /backbone/features.9/Add_output_0_splitncnn_1
+Convolution              /backbone/features.10/conv/conv.0/Conv 1 1 /backbone/features.9/Add_output_0_splitncnn_1 /backbone/features.10/conv/conv.2/Clip_output_0 0=384 1=1 5=1 6=24576 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.10/conv/conv.3/Conv 1 1 /backbone/features.10/conv/conv.2/Clip_output_0 /backbone/features.10/conv/conv.5/Clip_output_0 0=384 1=3 2=2 4=2 5=1 6=3456 7=384 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.10/conv/conv.6/Conv 1 1 /backbone/features.10/conv/conv.5/Clip_output_0 /backbone/features.10/conv/conv.6/Conv_output_0 0=64 1=1 5=1 6=24576
+BinaryOp                 /backbone/features.10/Add 2 1 /backbone/features.9/Add_output_0_splitncnn_0 /backbone/features.10/conv/conv.6/Conv_output_0 /backbone/features.10/Add_output_0
+Convolution              /backbone/features.11/conv/conv.0/Conv 1 1 /backbone/features.10/Add_output_0 /backbone/features.11/conv/conv.2/Clip_output_0 0=384 1=1 5=1 6=24576 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.11/conv/conv.3/Conv 1 1 /backbone/features.11/conv/conv.2/Clip_output_0 /backbone/features.11/conv/conv.5/Clip_output_0 0=384 1=3 2=2 4=2 5=1 6=3456 7=384 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.11/conv/conv.6/Conv 1 1 /backbone/features.11/conv/conv.5/Clip_output_0 /backbone/features.11/conv/conv.6/Conv_output_0 0=96 1=1 5=1 6=36864
+Split                    splitncnn_7              1 2 /backbone/features.11/conv/conv.6/Conv_output_0 /backbone/features.11/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.11/conv/conv.6/Conv_output_0_splitncnn_1
+Convolution              /backbone/features.12/conv/conv.0/Conv 1 1 /backbone/features.11/conv/conv.6/Conv_output_0_splitncnn_1 /backbone/features.12/conv/conv.2/Clip_output_0 0=576 1=1 5=1 6=55296 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.12/conv/conv.3/Conv 1 1 /backbone/features.12/conv/conv.2/Clip_output_0 /backbone/features.12/conv/conv.5/Clip_output_0 0=576 1=3 2=2 4=2 5=1 6=5184 7=576 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.12/conv/conv.6/Conv 1 1 /backbone/features.12/conv/conv.5/Clip_output_0 /backbone/features.12/conv/conv.6/Conv_output_0 0=96 1=1 5=1 6=55296
+BinaryOp                 /backbone/features.12/Add 2 1 /backbone/features.11/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.12/conv/conv.6/Conv_output_0 /backbone/features.12/Add_output_0
+Split                    splitncnn_8              1 2 /backbone/features.12/Add_output_0 /backbone/features.12/Add_output_0_splitncnn_0 /backbone/features.12/Add_output_0_splitncnn_1
+Convolution              /backbone/features.13/conv/conv.0/Conv 1 1 /backbone/features.12/Add_output_0_splitncnn_1 /backbone/features.13/conv/conv.2/Clip_output_0 0=576 1=1 5=1 6=55296 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.13/conv/conv.3/Conv 1 1 /backbone/features.13/conv/conv.2/Clip_output_0 /backbone/features.13/conv/conv.5/Clip_output_0 0=576 1=3 2=2 4=2 5=1 6=5184 7=576 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.13/conv/conv.6/Conv 1 1 /backbone/features.13/conv/conv.5/Clip_output_0 /backbone/features.13/conv/conv.6/Conv_output_0 0=96 1=1 5=1 6=55296
+BinaryOp                 /backbone/features.13/Add 2 1 /backbone/features.12/Add_output_0_splitncnn_0 /backbone/features.13/conv/conv.6/Conv_output_0 /backbone/features.13/Add_output_0
+Convolution              /backbone/features.14/conv/conv.0/Conv 1 1 /backbone/features.13/Add_output_0 /backbone/features.14/conv/conv.2/Clip_output_0 0=576 1=1 5=1 6=55296 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.14/conv/conv.3/Conv 1 1 /backbone/features.14/conv/conv.2/Clip_output_0 /backbone/features.14/conv/conv.5/Clip_output_0 0=576 1=3 2=2 4=2 5=1 6=5184 7=576 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.14/conv/conv.6/Conv 1 1 /backbone/features.14/conv/conv.5/Clip_output_0 /backbone/features.14/conv/conv.6/Conv_output_0 0=160 1=1 5=1 6=92160
+Split                    splitncnn_9              1 2 /backbone/features.14/conv/conv.6/Conv_output_0 /backbone/features.14/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.14/conv/conv.6/Conv_output_0_splitncnn_1
+Convolution              /backbone/features.15/conv/conv.0/Conv 1 1 /backbone/features.14/conv/conv.6/Conv_output_0_splitncnn_1 /backbone/features.15/conv/conv.2/Clip_output_0 0=960 1=1 5=1 6=153600 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.15/conv/conv.3/Conv 1 1 /backbone/features.15/conv/conv.2/Clip_output_0 /backbone/features.15/conv/conv.5/Clip_output_0 0=960 1=3 2=4 4=4 5=1 6=8640 7=960 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.15/conv/conv.6/Conv 1 1 /backbone/features.15/conv/conv.5/Clip_output_0 /backbone/features.15/conv/conv.6/Conv_output_0 0=160 1=1 5=1 6=153600
+BinaryOp                 /backbone/features.15/Add 2 1 /backbone/features.14/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.15/conv/conv.6/Conv_output_0 /backbone/features.15/Add_output_0
+Split                    splitncnn_10             1 2 /backbone/features.15/Add_output_0 /backbone/features.15/Add_output_0_splitncnn_0 /backbone/features.15/Add_output_0_splitncnn_1
+Convolution              /backbone/features.16/conv/conv.0/Conv 1 1 /backbone/features.15/Add_output_0_splitncnn_1 /backbone/features.16/conv/conv.2/Clip_output_0 0=960 1=1 5=1 6=153600 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.16/conv/conv.3/Conv 1 1 /backbone/features.16/conv/conv.2/Clip_output_0 /backbone/features.16/conv/conv.5/Clip_output_0 0=960 1=3 2=4 4=4 5=1 6=8640 7=960 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.16/conv/conv.6/Conv 1 1 /backbone/features.16/conv/conv.5/Clip_output_0 /backbone/features.16/conv/conv.6/Conv_output_0 0=160 1=1 5=1 6=153600
+BinaryOp                 /backbone/features.16/Add 2 1 /backbone/features.15/Add_output_0_splitncnn_0 /backbone/features.16/conv/conv.6/Conv_output_0 /backbone/features.16/Add_output_0
+Convolution              /backbone/features.17/conv/conv.0/Conv 1 1 /backbone/features.16/Add_output_0 /backbone/features.17/conv/conv.2/Clip_output_0 0=960 1=1 5=1 6=153600 9=3 -23310=2,0.000000e+00,6.000000e+00
+ConvolutionDepthWise     /backbone/features.17/conv/conv.3/Conv 1 1 /backbone/features.17/conv/conv.2/Clip_output_0 /backbone/features.17/conv/conv.5/Clip_output_0 0=960 1=3 2=4 4=4 5=1 6=8640 7=960 9=3 -23310=2,0.000000e+00,6.000000e+00
+Convolution              /backbone/features.17/conv/conv.6/Conv 1 1 /backbone/features.17/conv/conv.5/Clip_output_0 /backbone/features.17/conv/conv.6/Conv_output_0 0=320 1=1 5=1 6=307200
+Split                    splitncnn_11             1 5 /backbone/features.17/conv/conv.6/Conv_output_0 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_0 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_1 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_2 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_3 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_4
+Convolution              /aspp/branch1/branch1.0/Conv 1 1 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_4 /aspp/branch1/branch1.2/Relu_output_0 0=256 1=1 2=2 5=1 6=81920 9=1
+Convolution              /aspp/branch2/branch2.0/Conv 1 1 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_3 /aspp/branch2/branch2.2/Relu_output_0 0=256 1=3 2=12 4=12 5=1 6=737280 9=1
+Convolution              /aspp/branch3/branch3.0/Conv 1 1 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_2 /aspp/branch3/branch3.2/Relu_output_0 0=256 1=3 2=24 4=24 5=1 6=737280 9=1
+Convolution              /aspp/branch4/branch4.0/Conv 1 1 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_1 /aspp/branch4/branch4.2/Relu_output_0 0=256 1=3 2=36 4=36 5=1 6=737280 9=1
+Reduction                /aspp/ReduceMean         1 1 /backbone/features.17/conv/conv.6/Conv_output_0_splitncnn_0 /aspp/ReduceMean_output_0 0=3 1=0 -23303=1,2 4=1
+Reduction                /aspp/ReduceMean_1       1 1 /aspp/ReduceMean_output_0 /aspp/ReduceMean_1_output_0 0=3 1=0 -23303=1,3 4=1
+Convolution              /aspp/branch5_conv/Conv  1 1 /aspp/ReduceMean_1_output_0 /aspp/branch5_relu/Relu_output_0 0=256 1=1 5=1 6=81920 9=1
+Interp                   /aspp/Resize             1 1 /aspp/branch5_relu/Relu_output_0 /aspp/Resize_output_0 0=2 3=52 4=52
+Concat                   /aspp/Concat_1           5 1 /aspp/branch1/branch1.2/Relu_output_0 /aspp/branch2/branch2.2/Relu_output_0 /aspp/branch3/branch3.2/Relu_output_0 /aspp/branch4/branch4.2/Relu_output_0 /aspp/Resize_output_0 /aspp/Concat_1_output_0
+Convolution              /aspp/conv_cat/conv_cat.0/Conv 1 1 /aspp/Concat_1_output_0 /aspp/conv_cat/conv_cat.2/Relu_output_0 0=256 1=1 5=1 6=327680 9=1
+Convolution              /shortcut_conv/shortcut_conv.0/Conv 1 1 /backbone/features.3/Add_output_0_splitncnn_0 /shortcut_conv/shortcut_conv.2/Relu_output_0 0=48 1=1 5=1 6=1152 9=1
+Interp                   /Resize                  1 1 /aspp/conv_cat/conv_cat.2/Relu_output_0 /Resize_output_0 0=2 3=104 4=104
+Concat                   /Concat_1                2 1 /Resize_output_0 /shortcut_conv/shortcut_conv.2/Relu_output_0 /Concat_1_output_0
+Convolution              /cat_conv/cat_conv.0/Conv 1 1 /Concat_1_output_0 /cat_conv/cat_conv.2/Relu_output_0 0=256 1=3 4=1 5=1 6=700416 9=1
+Convolution              /cat_conv/cat_conv.4/Conv 1 1 /cat_conv/cat_conv.2/Relu_output_0 /cat_conv/cat_conv.6/Relu_output_0 0=256 1=3 4=1 5=1 6=589824 9=1
+Convolution              /cls_conv/Conv           1 1 /cat_conv/cat_conv.6/Relu_output_0 /cls_conv/Conv_output_0 0=4 1=1 5=1 6=1024
+Interp                   /Resize_1                1 1 /cls_conv/Conv_output_0 output 0=2 3=416 4=416
