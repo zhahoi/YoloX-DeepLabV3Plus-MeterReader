@@ -2,7 +2,7 @@
 #include "gpu.h"
 #include <iostream>
  
-// Ϊ�˷�ֹ�ظ�����
+// 为了防止重复创建
 std::vector<cv::Mat> cut_images;
 cv::Mat resize_image;
 cv::Mat cut_image;
@@ -125,11 +125,14 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         cv::imshow("input_image: ", input_image);
         cv::waitKey(0);
 #endif
-        // ��Ҫ������ͼ����в�ʧ���resize
+        // 这里发现如果进行不失真的resize结果可能会不准确，所以直接粗暴地进行resze了，原因可能是训练模型的时候就没有加灰条
+        cv::resize(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), 0, 0, cv::INTER_LINEAR);
+        /*
+        // 需要对输入图像进行不失真的resize
         float scale = LetterBoxImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(114, 114, 114));
 
         std::cout << "current scale: " << scale << std::endl;
-
+        */
         // cv::imshow("resize_image", resize_image);
         // cv::waitKey(0);
 
@@ -143,31 +146,45 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         cv::Mat mask(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE, CV_8UC1);
         uchar* pMask = mask.data;
 
-        const float* class0mask = res.channel(0);
-        const float* class1mask = res.channel(1);
-        const float* class2mask = res.channel(2);
-        const float* class3mask = res.channel(3);
+        const float* class0mask = res.channel(0); // background
+        const float* class1mask = res.channel(1); // pointer
+        const float* class2mask = res.channel(2); // scale
+
+        // 输出一种掩码图，让背景数值为0，指针数值为1，刻度数值为2
         for (int i = 0; i < DEEPLABV3P_TARGET_SIZE * DEEPLABV3P_TARGET_SIZE; i++)
         {
-            // 1��pointer 2: scale
-            // pMask[i] = class0mask[i] > class1mask[i] ? 0 :
+            // 0: background 1：pointer 2: scale
+            // pMask[i] = class0mask[i] > class1mask[i] ? 0 : 1
             if (class0mask[i] > class1mask[i])
+            {
                 if (class0mask[i] > class2mask[i])
-                    pMask[i] = 0;
+                {
+                    pMask[i] = 0;  // 背景
+                }
                 else
-                    pMask[i] = 2;
+                {
+                    pMask[i] = 2;  // 刻度
+                }
+            }
             else
+            {
                 if (class1mask[i] > class2mask[i])
-                    pMask[i] = 1;
+                {
+                    pMask[i] = 1;  // 指针
+                }
                 else
-                    pMask[i] = 2;
+                {
+                    pMask[i] = 2;  // 刻度
+                }
+            }
         }
+        
 #ifdef VISUALIZE
         std::cout << "Res shape: " << res.h << ", " << res.w << ", " << res.c << std::endl;
 #endif
 
         /*
-        // ʹ��scale�жϵ�ǰ��ͼƬ��С�Ƿ����resize���ͼ��Ȼ���ٽ��з���
+        // 使用scale判断当前的图片大小是否大于resize后的图像，然后再进行返回
         cv::Rect roi_rect;
         cv::Mat mask_resize, mask_recover;
         int x_offset, y_offset;
@@ -176,7 +193,7 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
 
         std::cout << "max_size: " << max_size << std::endl;
 
-        if (scale >= 1)  // ˵�����ͼ�����resize���ͼ��
+        if (scale >= 1)  // 说明检测图像大于resize后的图像
         {
             x_offset = (max_size - input_image.cols) / 2;
             y_offset = (max_size - input_image.rows) / 2;
@@ -194,7 +211,7 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
 
             mask_recover = mask_resize(roi_rect);
         }
-        else // ˵�����ͼ��С��resize���ͼ��
+        else // 说明检测图像小于resize后的图像
         {
             x_offset = (DEEPLABV3P_TARGET_SIZE * scale - input_image.cols) / 2;
             y_offset = (DEEPLABV3P_TARGET_SIZE * scale - input_image.rows) / 2;
