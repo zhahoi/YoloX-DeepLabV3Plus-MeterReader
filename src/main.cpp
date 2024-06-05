@@ -1,12 +1,13 @@
 #include "meter_seg.h"
 #include "meter_reader.h"
 #include "meter_detect.h"
+#include "meter_readerv2.h"
 
 #include <float.h>
 #include <stdio.h>
 #include <vector>
 
-// ç”¨äºå¤šçº¿ç¨‹
+// ÓÃÓÚ¶àÏß³Ì
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -19,8 +20,8 @@
 
 #define det_param  "C:/CPlusPlus/MetersReader/models/yolox_s.param"
 #define det_bin "C:/CPlusPlus/MetersReader/models/yolox_s.bin"
-#define seg_param "C:/CPlusPlus/MetersReader/models/deeplabv3p_f16.param"
-#define seg_bin "C:/CPlusPlus/MetersReader/models/deeplabv3p_f16.bin"
+#define seg_param "C:/CPlusPlus/MetersReader/models/deeplabv3p_fp16.param"
+#define seg_bin "C:/CPlusPlus/MetersReader/models/deeplabv3p_fp16.bin"
 #define rtsp_dir "rtsp://admin:Admin123@192.168.1.13:554/snl/live/1/1"
 #define devicenum 0
 #define video_width 1280
@@ -28,14 +29,15 @@
 
 // #define USE_RTSP 1
 
-static std::mutex mutex;  // è¿›ç¨‹é”
+static std::mutex mutex;  // ½ø³ÌËø
 static std::atomic_bool isOpen;
-static std::queue<cv::Mat> frames;  // å…ˆè¿›å…ˆå‡ºé˜Ÿåˆ—
+static std::queue<cv::Mat> frames;  // ÏÈ½øÏÈ³ö¶ÓÁĞ
 static bool is_image; 
 
 MeterDetection* meterDet = new MeterDetection(det_param, det_bin);
 MeterSegmentation* meterSeg = new MeterSegmentation(seg_param, seg_bin);
 MeterReader meterReader;
+MeterReaderV2 meterReaderV2;
 
 std::vector<cv::Mat> meters_image;
 std::vector<cv::Mat> meters_image_pad;
@@ -43,7 +45,7 @@ std::vector<Object> objects;
 std::vector<cv::Mat> seg_result;
 std::vector<float> scale_values;
 cv::Mat frame, img_vis;
-
+std::vector<READ_RESULT> read_results;
 
 void process(const cv::Mat& input_image)
 {
@@ -59,23 +61,28 @@ void process(const cv::Mat& input_image)
 	std::cout << "object size: " << objects.size() << std::endl;
 	// ::Mat img_vis = meterDet->draw_objects(m, objects);
 
-	// å¦‚æœæ£€æµ‹åˆ°ç›®æ ‡
+	// Èç¹û¼ì²âµ½Ä¿±ê
 	if (objects.size() > 0)
 	{
-		// meters_imageä¸­å­˜æ”¾çš„æ˜¯ä»ªè¡¨å›¾ç‰‡
+		// meters_imageÖĞ´æ·ÅµÄÊÇÒÇ±íÍ¼Æ¬
 		meters_image.clear();
 		meters_image = meterSeg->cut_roi_img(input_image, objects);
 
-		// å¯¹ä»ªè¡¨å›¾ç‰‡è¿›è¡Œåˆ†å‰²æ“ä½œ
+		// ¶ÔÒÇ±íÍ¼Æ¬½øĞĞ·Ö¸î²Ù×÷
 		seg_result.clear();
 		meters_image_pad.clear();
 		seg_result = meterSeg->preprocess(meters_image, meters_image_pad);
 
-		// ç”¨æ¥å­˜æ”¾æ£€æµ‹ç»“æœ
+		// ÁíÒ»ÖÖ·½·¨
+		// read_results.clear();
+		// meterReaderV2.read_process(seg_result, read_results);
+
+		// ÓÃÀ´´æ·Å¼ì²â½á¹û
 		scale_values.clear();
 		scale_values = meterReader.multi_read_process(meters_image_pad, seg_result);
+		// scale_values = meterReaderV2.get_result(read_results);
 
-		// å¯¹æ£€æµ‹ç»“æœè¿›è¡Œå¯è§†åŒ–
+		// ¶Ô¼ì²â½á¹û½øĞĞ¿ÉÊÓ»¯
 		img_vis = meterReader.result_visualizer(input_image, objects, scale_values);
 
 		if (img_vis.empty()) {
@@ -106,18 +113,18 @@ static void getCameraFrame(std::string rtspDir, int deviceNum, int height, int w
 {
 	std::cout << "open camera ..." << std::endl;
 #ifdef USE_RTSP
-	// è¯»å–rtsp
-	cv::VideoCapture cap; // æ‰“å¼€æ‘„åƒå¤´å‡½æ•°
+	// ¶ÁÈ¡rtsp
+	cv::VideoCapture cap; // ´ò¿ªÉãÏñÍ·º¯Êı
 	cap.open(rtspDir);
 #else
-	// ç”µè„‘æ‘„åƒå¤´è¯»å–
+	// µçÄÔÉãÏñÍ·¶ÁÈ¡
 	cv::VideoCapture cap(devicenum);
 #endif // USE_RTSP
 
 	cap.set(CV_CAP_PROP_FRAME_WIDTH, width);
 	cap.set(CV_CAP_PROP_FRAME_HEIGHT, height);
-	cap.set(CV_CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'));  // è§†é¢‘æµæ ¼å¼
-	cap.set(CV_CAP_PROP_FPS, 30);  // å¸§ç‡  å¸§/ç§’
+	cap.set(CV_CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'));  // ÊÓÆµÁ÷¸ñÊ½
+	cap.set(CV_CAP_PROP_FPS, 30);  // Ö¡ÂÊ  Ö¡/Ãë
 
 	if (!cap.isOpened())
 	{
@@ -130,10 +137,10 @@ static void getCameraFrame(std::string rtspDir, int deviceNum, int height, int w
 	while (isOpen)
 	{
 		cap >> frame;
-		mutex.lock();  // ä¿®æ”¹å…¬å…±èµ„æºï¼Œç”¨è¿›ç¨‹é”é”å®š
+		mutex.lock();  // ĞŞ¸Ä¹«¹²×ÊÔ´£¬ÓÃ½ø³ÌËøËø¶¨
 		frames.push(frame);
 		mutex.unlock();
-	}  // è¢«ä¸»è¿›ç¨‹é€šçŸ¥ç»“æŸå¾ªç¯
+	}  // ±»Ö÷½ø³ÌÍ¨Öª½áÊøÑ­»·
 	std::cout << "releasing camera occupied..." << std::endl;
 	cap.release();
 	std::cout << "release camera occupied succeed..." << std::endl;
@@ -142,22 +149,22 @@ static void getCameraFrame(std::string rtspDir, int deviceNum, int height, int w
 
 static void processCameraFrame()
 {
-	cv::namedWindow("frame");  // åˆ›å»ºæ˜¾ç¤ºçª—å£
+	cv::namedWindow("frame");  // ´´½¨ÏÔÊ¾´°¿Ú
 	while (isOpen)
 	{
-		if (!frames.empty())  // é˜Ÿåˆ—é‡Œæœ‰å¸§
+		if (!frames.empty())  // ¶ÓÁĞÀïÓĞÖ¡
 		{
 			mutex.lock();
 			frame = frames.front();
-			frames.pop();  // å¸§å‡ºé˜Ÿ
+			frames.pop();  // Ö¡³ö¶Ó
 			mutex.unlock();
 
-			auto start = std::chrono::high_resolution_clock::now();  // è®°å½•å¼€å§‹æ—¶é—´
+			auto start = std::chrono::high_resolution_clock::now();  // ¼ÇÂ¼¿ªÊ¼Ê±¼ä
 			process(frame);
-			auto end = std::chrono::high_resolution_clock::now();  // è®°å½•å¼€å§‹æ—¶é—´
+			auto end = std::chrono::high_resolution_clock::now();  // ¼ÇÂ¼¿ªÊ¼Ê±¼ä
 
-			std::chrono::duration<double, std::milli> duration = end - start;   // è®¡ç®—æ‰§è¡Œæ—¶é—´
-			std::cout << "execute timeï¼š " << duration.count() << " ms" << std::endl;
+			std::chrono::duration<double, std::milli> duration = end - start;   // ¼ÆËãÖ´ĞĞÊ±¼ä
+			std::cout << "execute time£º " << duration.count() << " ms" << std::endl;
 		}
 	}
 	cv::destroyWindow("frame");
@@ -167,19 +174,24 @@ static void processCameraFrame()
 
 int main(int argc, char** argv)
 {
+	/*
 	if (argc != 2)
 	{
 		fprintf(stderr, "Usage: %s [image] or [video] \n", argv[0]);
 		return -1;
 	}
+	*/
+	// std::string detect_method = argv[1];
+	std::string detect_method = "video";
 
-	std::string detect_method = argv[1];
-	is_image = false; // åˆè®¾
+	is_image = false; // ³õÉè
 
 	if (detect_method == "image")
 	{
 		is_image = true; 
-		const char* input_image_path = "C:/CPlusPlus/MetersReader/models/new_meter.jpg";
+		// C:/Dataset/MeterVideo/meter_label/images/20190822_23.jpg
+		// "C:/CPlusPlus/MetersReader/models/new_meter.jpg";
+		const char* input_image_path = "C:/Dataset/MeterVideo/meter_label/images/20190822_1.jpg";
 		cv::Mat input_image = cv::imread(input_image_path);
 		process(input_image);
 	}
@@ -192,7 +204,7 @@ int main(int argc, char** argv)
 		std::thread t2(processCameraFrame);
 		t2.detach();
 
-		isOpen = true;  // åˆè®¾
+		isOpen = true;  // ³õÉè
 
 		while (1)
 		{
@@ -201,7 +213,7 @@ int main(int argc, char** argv)
 				break;
 		}
 		isOpen = false;
-		Sleep(1);  // ç­‰å¾…è¿›ç¨‹ç»“æŸ
+		Sleep(1);  // µÈ´ı½ø³Ì½áÊø
 	}
 
 	printf("meter end\n");

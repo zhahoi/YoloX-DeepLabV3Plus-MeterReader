@@ -61,7 +61,7 @@ MeterDetection::MeterDetection(const char* param, const char* bin)
 	yolox.load_model(bin);
 }
 
-bool MeterDetection::detect_objects(cv::Mat& image, std::vector<Object>& objects)
+bool MeterDetection::detect_objects(const cv::Mat& image, std::vector<Object>& objects)
 {
     if (image.empty())
         return false;

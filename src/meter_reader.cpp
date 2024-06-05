@@ -17,15 +17,15 @@ std::string MeterReader::floatToString(const float& val)
     return str;
 }
 
-// å®ç°argsortåŠŸèƒ½
+// ÊµÏÖargsort¹¦ÄÜ
 std::vector<int> MeterReader::argsort(const std::vector<int>& array) {
 
     int size = array.size();
-    std::vector<int> array_index(size, 0); // åˆå§‹åŒ–ä¸€ä¸ªé•¿åº¦ä¸ºsize,å€¼å…¨ä¸º0çš„æ•°ç»„
+    std::vector<int> array_index(size, 0); // ³õÊ¼»¯Ò»¸ö³¤¶ÈÎªsize,ÖµÈ«Îª0µÄÊı×é
     for (int i = 0; i < size; i++) {
         array_index[i] = i;
     }
-    // sort ç¬¬ä¸‰ä¸ªå‚æ•°æ˜¯Lambdaè¡¨è¾¾å¼ï¼Œ è¡¨è¾¾å¼[]å†…æ˜¯ä¼ å…¥çš„å‚æ•°
+    // sort µÚÈı¸ö²ÎÊıÊÇLambda±í´ïÊ½£¬ ±í´ïÊ½[]ÄÚÊÇ´«ÈëµÄ²ÎÊı
     std::sort(array_index.begin(), array_index.end(), [&array](int pos1, int pos2){
         return array[pos1] < array[pos2];
     });
@@ -33,20 +33,20 @@ std::vector<int> MeterReader::argsort(const std::vector<int>& array) {
     return array_index;
 }
 
-// è®¡ç®—ä¸¤ç‚¹é—´çš„è·ç¦»
+// ¼ÆËãÁ½µã¼äµÄ¾àÀë
 double MeterReader::getDistance(cv::Point2f point1, cv::Point2f point2) {
 
     double distance = sqrtf(powf(point1.x - point2.x, 2) + powf(point1.y - point2.y, 2));
     return distance;
 }
 
-// äºŒå€¼åŒ–ï¼Œè¾“å…¥æ˜¯è¯­ä¹‰åˆ†å‰²çš„srcï¼ˆå•é€šé“å›¾åƒï¼‰ã€è¾“å‡ºdst(å’Œsrcç›¸åŒå½¢çŠ¶ï¼‰å’ŒæŒ‡å®šç±»åˆ«ID
-// åƒç´ ç‚¹çš„ç°åº¦å€¼å¦‚æœç­‰äºæŒ‡å®šç±»åˆ«IDåˆ™åƒç´ å€¼ç½®ä¸º255ï¼Œå¦åˆ™ç½®ä¸º0
+// ¶şÖµ»¯£¬ÊäÈëÊÇÓïÒå·Ö¸îµÄsrc£¨µ¥Í¨µÀÍ¼Ïñ£©¡¢Êä³ödst(ºÍsrcÏàÍ¬ĞÎ×´£©ºÍÖ¸¶¨Àà±ğID
+// ÏñËØµãµÄ»Ò¶ÈÖµÈç¹ûµÈÓÚÖ¸¶¨Àà±ğIDÔòÏñËØÖµÖÃÎª255£¬·ñÔòÖÃÎª0
 // cv::Mat dst = cv::Mat(src.rows, src.cols, CV_8UC1);
 int MeterReader::thresholdByCategory(cv::Mat& src, cv::Mat& dst, int category) {
     uchar* p = NULL;
     uchar* q = NULL;
-    // åŸºäºæŒ‡é’ˆçš„æ–¹å¼æ¥è¯»å–CV::Mat
+    // »ùÓÚÖ¸ÕëµÄ·½Ê½À´¶ÁÈ¡CV::Mat
     for (int row = 0; row < src.rows; row++) {
         p = src.ptr<uchar>(row);
         q = dst.ptr<uchar>(row);
@@ -67,7 +67,7 @@ int MeterReader::thresholdByCategory(cv::Mat& src, cv::Mat& dst, int category) {
     return 0;
 }
 
-// è¾“å…¥æ˜¯ä¸€ä¸ªäºŒå€¼åŒ–çš„å›¾åƒï¼Œé’ˆå¯¹æŒ‡å®šåŒºåŸŸçš„åƒç´ ç½®ä¸º0
+// ÊäÈëÊÇÒ»¸ö¶şÖµ»¯µÄÍ¼Ïñ£¬Õë¶ÔÖ¸¶¨ÇøÓòµÄÏñËØÖÃÎª0
 int MeterReader::thresholdByContour(cv::Mat& src, cv::Mat& dst, std::vector<cv::Point2f>& contour) {
     uchar* p = NULL;
     uchar* q = NULL;
@@ -93,10 +93,10 @@ int MeterReader::thresholdByContour(cv::Mat& src, cv::Mat& dst, std::vector<cv::
 }
 
 
-// è·å–è¡¨ç›˜çš„èµ·ç‚¹å’Œç»ˆç‚¹ä½ç½®
-// è¾“å…¥çš„æ˜¯è¡¨ç›˜äºŒå€¼åŒ–å›¾åƒï¼Œæ³¨æ„è¡¨ç›˜éœ€è¦å…ˆåšä¸€æ¬¡è…èš€æ“ä½œï¼Œè¿‡æ»¤æ‰é›¶æ˜Ÿçš„è¯¯æ£€
+// »ñÈ¡±íÅÌµÄÆğµãºÍÖÕµãÎ»ÖÃ
+// ÊäÈëµÄÊÇ±íÅÌ¶şÖµ»¯Í¼Ïñ£¬×¢Òâ±íÅÌĞèÒªÏÈ×öÒ»´Î¸¯Ê´²Ù×÷£¬¹ıÂËµôÁãĞÇµÄÎó¼ì
 int MeterReader::getScaleLocation(cv::Mat& dial_mask, cv::Point2f* locations) {
-    // å®šä¹‰è¡¨ç›˜çš„èµ·ç‚¹ä½ç½®å’Œç»ˆç‚¹ä½ç½®
+    // ¶¨Òå±íÅÌµÄÆğµãÎ»ÖÃºÍÖÕµãÎ»ÖÃ
     cv::Point2f beginning(-1, -1);
     cv::Point2f end(-1, -1);
 
@@ -106,12 +106,12 @@ int MeterReader::getScaleLocation(cv::Mat& dial_mask, cv::Point2f* locations) {
         for (int col = 0; col < dial_mask.cols; col++) {
             int value = tmp[col];
             if (value == 255) {
-                // æ»¡è¶³èµ·ç‚¹ä½ç½®åœ¨å›¾åƒå·¦åŠä¾§ï¼Œä¸”èµ·ç‚¹ä½ç½®æœªèµ‹å€¼
+                // Âú×ãÆğµãÎ»ÖÃÔÚÍ¼Ïñ×ó°ë²à£¬ÇÒÆğµãÎ»ÖÃÎ´¸³Öµ
                 if (col < dial_mask.cols / 2 && beginning.x == -1) {
                     beginning.x = col;
                     beginning.y = row;
                 }
-                // æ»¡è¶³ç»ˆç‚¹ä½ç½®åœ¨å›¾åƒå³åŠä¾§ï¼Œä¸”ç»ˆç‚¹ä½ç½®æœªèµ‹å€¼
+                // Âú×ãÖÕµãÎ»ÖÃÔÚÍ¼ÏñÓÒ°ë²à£¬ÇÒÖÕµãÎ»ÖÃÎ´¸³Öµ
                 if (col >= dial_mask.cols / 2 && end.x == -1) {
                     end.x = col;
                     end.y = row;
@@ -128,7 +128,7 @@ int MeterReader::getScaleLocation(cv::Mat& dial_mask, cv::Point2f* locations) {
 }
 
 
-// è·å–ä»ªè¡¨ä¸­å¿ƒç‚¹ä½ç½®
+// »ñÈ¡ÒÇ±íÖĞĞÄµãÎ»ÖÃ
 int MeterReader::getCenterLocation(cv::Mat& img, cv::Point2f& center_location) {
     // get gray image
     cv::cvtColor(img, gray_img, cv::COLOR_BGR2GRAY);
@@ -140,7 +140,7 @@ int MeterReader::getCenterLocation(cv::Mat& img, cv::Point2f& center_location) {
     int kernel_size = 3;
     cv::Mat kernel = getStructuringElement(cv::MORPH_RECT, cv::Size(kernel_size, kernel_size));
 
-    // erode and dilate(å¼€è¿ç®—)
+    // erode and dilate(¿ªÔËËã)
     cv::morphologyEx(gray_img, gray_open_img, cv::MORPH_OPEN, kernel);
 
     cv::threshold(gray_open_img, bin_img, 115, 255, cv::THRESH_BINARY);
@@ -168,9 +168,9 @@ int MeterReader::getCenterLocation(cv::Mat& img, cv::Point2f& center_location) {
             // std::cout << "center_location.x" << center_location.x << ", " << "center_location.y" << center_location.y << std::endl;
           
             /*
-            // ç”»åœ†
+            // »­Ô²
             cv::circle(img, center_location, center_radius, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
-            // ç”»åœ†å¿ƒ
+            // »­Ô²ĞÄ
             cv::circle(img, center_location, 2, cv::Scalar(255, 0, 0), 2, cv::LINE_AA);
             
             cv::imshow("output", img);
@@ -188,9 +188,9 @@ int MeterReader::getCenterLocation(cv::Mat& img, cv::Point2f& center_location) {
 /*
 int MeterReader::getCenterLocation(cv::Mat& dial_mask, cv::Point2f& center_location) {
 
-    // ç›´å¾„ï¼ˆæ‰¾åˆ°ä»ªè¡¨æ©ç æœ€å³ä¾§åƒç´ ç‚¹ä½ç½®å‡å»æœ€å·¦ä¾§åƒç´ ç‚¹ä½ç½®çš„æœ€å¤§å€¼ï¼Œå³ç›´å¾„ï¼‰
+    // Ö±¾¶£¨ÕÒµ½ÒÇ±íÑÚÂë×îÓÒ²àÏñËØµãÎ»ÖÃ¼õÈ¥×î×ó²àÏñËØµãÎ»ÖÃµÄ×î´óÖµ£¬¼´Ö±¾¶£©
     int diameter = 0;
-    // æ»¡è¶³ç›´å¾„çš„åŒºåŸŸé€šå¸¸ä¼šæ˜¯ä¸€ä¸ªçŸ©å½¢åŒºåŸŸï¼Œæ‰€ä»¥éœ€è¦å¾—åˆ°ä¸Šä¸‹å·¦å³å››ä¸ªç´¢å¼•
+    // Âú×ãÖ±¾¶µÄÇøÓòÍ¨³£»áÊÇÒ»¸ö¾ØĞÎÇøÓò£¬ËùÒÔĞèÒªµÃµ½ÉÏÏÂ×óÓÒËÄ¸öË÷Òı
     std::vector<int> diameter_index(4, -1);
     uchar* tmp = NULL;
     for (int row = dial_mask.rows - 1; row >= 0; row--) {
@@ -228,24 +228,24 @@ int MeterReader::getCenterLocation(cv::Mat& dial_mask, cv::Point2f& center_locat
 
 
 
-// è·å–å›¾åƒä¸­æœ€å¤§è½®å»“çš„æœ€å°å¤–æ¥æ—‹è½¬æ¡†çŸ©å½¢çš„å››ä¸ªé¡¶ç‚¹ä½ç½®ã€‚
-// ä¹‹æ‰€ä»¥æ˜¯æœ€å¤§è½®å»“ï¼Œä¹Ÿæ˜¯ä¸ºäº†è¿‡æ»¤æ‰é›¶æ˜Ÿçš„è¯¯æ£€
+// »ñÈ¡Í¼ÏñÖĞ×î´óÂÖÀªµÄ×îĞ¡Íâ½ÓĞı×ª¿ò¾ØĞÎµÄËÄ¸ö¶¥µãÎ»ÖÃ¡£
+// Ö®ËùÒÔÊÇ×î´óÂÖÀª£¬Ò²ÊÇÎªÁË¹ıÂËµôÁãĞÇµÄÎó¼ì
 int MeterReader::getMinAreaRectPoints(cv::Mat& pointer_mask, cv::Point2f* Ps) {
 
-    //ä¸€ä¸ªè½®å»“æ˜¯è‹¥å¹²ä¸ªè¿ç»­çš„ç‚¹çš„åˆ—è¡¨ï¼Œè¿™é‡Œå®šä¹‰çš„æ˜¯è½®å»“çš„åˆ—è¡¨
+    //Ò»¸öÂÖÀªÊÇÈô¸É¸öÁ¬ĞøµÄµãµÄÁĞ±í£¬ÕâÀï¶¨ÒåµÄÊÇÂÖÀªµÄÁĞ±í
     std::vector<std::vector<cv::Point>> contours;
-    // ä¿å­˜çš„æ˜¯è½®å»“é—´å…³ç³»
+    // ±£´æµÄÊÇÂÖÀª¼ä¹ØÏµ
     std::vector<cv::Vec4i> hierarchy;
-    // è¿™é‡Œæ¨¡å¼ä½¿ç”¨çš„æ˜¯ä»…æ‰¾æœ€å¤–å±‚è½®å»“
+    // ÕâÀïÄ£Ê½Ê¹ÓÃµÄÊÇ½öÕÒ×îÍâ²ãÂÖÀª
     cv::findContours(pointer_mask, contours, hierarchy,
         cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE, cv::Point());
 
-    // å¼‚å¸¸åˆ¤å®š
+    // Òì³£ÅĞ¶¨
     int len = contours.size();
     if (len <= 0) return -1;
 
     int index = -1;
-    int max_min_rect_area = 0; // æœ€å¤§çš„æœ€å°å¤–æ¥çŸ©å½¢é¢ç§¯
+    int max_min_rect_area = 0; // ×î´óµÄ×îĞ¡Íâ½Ó¾ØĞÎÃæ»ı
     for (int i = 0; i < len; i++) {
         cv::RotatedRect rect = cv::minAreaRect(contours[i]);
         if (rect.size.area() > max_min_rect_area) {
@@ -259,15 +259,15 @@ int MeterReader::getMinAreaRectPoints(cv::Mat& pointer_mask, cv::Point2f* Ps) {
     return 0;
 }
 
-// è·å–æŒ‡é’ˆå¤´éƒ¨çš„ç‚¹ï¼ˆæŒ‡é’ˆæ˜¯ä¸€ä¸ªæ—‹è½¬çŸ©å½¢ï¼Œå¤´éƒ¨æœ‰ä¸¤ä¸ªé¡¶ç‚¹ï¼Œæœ¬å‡½æ•°è·å–çš„æ˜¯è¯¥ç‚¹é¡ºæ—¶é’ˆæ–¹å‘ä¸ºçŸ­è¾¹çš„ç‚¹ï¼‰
-// è¾“å…¥ï¼šæŒ‡é’ˆçš„äºŒå€¼åŒ–å›¾åƒï¼Œä»ªè¡¨ç›˜ä¸­å¿ƒï¼ŒæŒ‡é’ˆæ—‹è½¬çŸ©å½¢å››ä¸ªé¡¶ç‚¹
-// è¾“å‡ºï¼šæŒ‡é’ˆæ—‹è½¬çŸ©å½¢å››ä¸ªé¡¶ç‚¹ä¸­æŒ‡é’ˆå¤´éƒ¨é¡¶ç‚¹çš„ç´¢å¼•
+// »ñÈ¡Ö¸ÕëÍ·²¿µÄµã£¨Ö¸ÕëÊÇÒ»¸öĞı×ª¾ØĞÎ£¬Í·²¿ÓĞÁ½¸ö¶¥µã£¬±¾º¯Êı»ñÈ¡µÄÊÇ¸ÃµãË³Ê±Õë·½ÏòÎª¶Ì±ßµÄµã£©
+// ÊäÈë£ºÖ¸ÕëµÄ¶şÖµ»¯Í¼Ïñ£¬ÒÇ±íÅÌÖĞĞÄ£¬Ö¸ÕëĞı×ª¾ØĞÎËÄ¸ö¶¥µã
+// Êä³ö£ºÖ¸ÕëĞı×ª¾ØĞÎËÄ¸ö¶¥µãÖĞÖ¸ÕëÍ·²¿¶¥µãµÄË÷Òı
 int MeterReader::getPointerVertexIndex(cv::Point2f& center_location, cv::Point2f* Ps, int& vertex_index) {
     int max_distance = -1;
     for (int i = 0; i < 4; i++) {
-        // é¡ºæ—¶é’ˆæ–¹å‘ä¸ºçŸ­è¾¹
+        // Ë³Ê±Õë·½ÏòÎª¶Ì±ß
         if (getDistance(Ps[i], Ps[(i + 1) % 4]) > getDistance(Ps[i], Ps[(i + 3) % 4])) {
-            // æŒ‡é’ˆå¤´éƒ¨
+            // Ö¸ÕëÍ·²¿
             if (max_distance <= getDistance(Ps[i], center_location)) {
                 max_distance = getDistance(Ps[i], center_location);
                 vertex_index = i;
@@ -280,16 +280,16 @@ int MeterReader::getPointerVertexIndex(cv::Point2f& center_location, cv::Point2f
 
 int MeterReader::getPointerLocation(cv::Mat& pointer_mask, cv::Point2f& center_location, cv::Point2f* pointer_location) {
 
-    // å…ˆæ ¹æ®æŒ‡é’ˆäºŒå€¼åŒ–å›¾åƒæ¥æ‰¾åˆ°æœ€å°å¤–æ¥æ—‹è½¬çŸ©å½¢é¡¶ç‚¹
+    // ÏÈ¸ù¾İÖ¸Õë¶şÖµ»¯Í¼ÏñÀ´ÕÒµ½×îĞ¡Íâ½ÓĞı×ª¾ØĞÎ¶¥µã
     cv::Point2f Ps[4];
     int res = getMinAreaRectPoints(pointer_mask, Ps);
     if (res == -1) return res;
 
-    // æ ¹æ®çŸ©å½¢é¡¶ç‚¹æ‰¾åˆ°å¤´éƒ¨çš„ç‚¹çš„ç´¢å¼•
+    // ¸ù¾İ¾ØĞÎ¶¥µãÕÒµ½Í·²¿µÄµãµÄË÷Òı
     int vertex_index = -1;
     getPointerVertexIndex(center_location, Ps, vertex_index);
 
-    // å°†æŒ‡é’ˆåˆ†ä¸ºä¸¤éƒ¨åˆ†ï¼Œé è¿‘ä»ªè¡¨ä¸­å¿ƒçš„éƒ¨åˆ†äºŒå€¼åŒ–ä¸º0
+    // ½«Ö¸Õë·ÖÎªÁ½²¿·Ö£¬¿¿½üÒÇ±íÖĞĞÄµÄ²¿·Ö¶şÖµ»¯Îª0
     cv::Point2f left_midPointer((Ps[vertex_index].x + Ps[(vertex_index + 1) % 4].x) / 2.0, (Ps[vertex_index].y + Ps[(vertex_index + 1) % 4].y) / 2.0);
     cv::Point2f right_midPointer((Ps[(vertex_index + 2) % 4].x + Ps[(vertex_index + 3) % 4].x) / 2.0, (Ps[(vertex_index + 2) % 4].y + Ps[(vertex_index + 3) % 4].y) / 2.0);
 
@@ -302,7 +302,7 @@ int MeterReader::getPointerLocation(cv::Mat& pointer_mask, cv::Point2f& center_l
 
     thresholdByContour(pointer_mask, pointer_mask, contour);
 
-    // å†æ ¹æ®äºŒå€¼åŒ–åçš„å›¾åƒé‡æ–°æ‰¾æœ€å°å¤–æ¥æ—‹è½¬çŸ©å½¢
+    // ÔÙ¸ù¾İ¶şÖµ»¯ºóµÄÍ¼ÏñÖØĞÂÕÒ×îĞ¡Íâ½ÓĞı×ª¾ØĞÎ
     res = getMinAreaRectPoints(pointer_mask, Ps);
     if (res == -1) return res;
     getPointerVertexIndex(center_location, Ps, vertex_index);
@@ -316,10 +316,10 @@ int MeterReader::getPointerLocation(cv::Mat& pointer_mask, cv::Point2f& center_l
 }
 
 
-// è§’åº¦æ³•è®¡ç®—å½“å‰åˆ»åº¦å æ€»åˆ»åº¦çš„æ¯”ä¾‹
+// ½Ç¶È·¨¼ÆËãµ±Ç°¿Ì¶ÈÕ¼×Ü¿Ì¶ÈµÄ±ÈÀı
 float MeterReader::getAngleRatio(cv::Point2f* scale_locations, cv::Point2f& pointer_head_location, cv::Point2f& center_location) {
 
-    // åˆ»åº¦å¼€å§‹ç‚¹ä¸xè½´æ­£æ–¹å‘çš„å¤¹è§’ï¼Œåˆ»åº¦ç»“æŸç‚¹ä¸xè½´æ­£æ–¹å‘çš„å¤¹è§’ï¼Œåˆ»åº¦å¼€å§‹ç‚¹ä¸åˆ»åº¦ç»“æŸç‚¹çš„å¤¹è§’
+    // ¿Ì¶È¿ªÊ¼µãÓëxÖáÕı·½ÏòµÄ¼Ğ½Ç£¬¿Ì¶È½áÊøµãÓëxÖáÕı·½ÏòµÄ¼Ğ½Ç£¬¿Ì¶È¿ªÊ¼µãÓë¿Ì¶È½áÊøµãµÄ¼Ğ½Ç
     float beginning_x_angle = atan2(center_location.y - scale_locations[0].y,
         scale_locations[0].x - center_location.x);
     float end_x_angle = atan2(center_location.y - scale_locations[1].y,
@@ -394,8 +394,8 @@ void MeterReader::drawMask(cv::Mat& img, cv::Mat& mask, float scale_value) {
 }
 
 
-// è¾“å…¥æ˜¯mask, ä¸€å…±æœ‰ä¸‰ä¸ªç±»åˆ«ï¼Œå…¶ä¸­0-2åˆ†åˆ«ä»£è¡¨èƒŒæ™¯ã€æŒ‡é’ˆå’Œåˆ»åº¦
-// è¾“å‡ºæ˜¯åˆ»åº¦å€¼
+// ÊäÈëÊÇmask, Ò»¹²ÓĞÈı¸öÀà±ğ£¬ÆäÖĞ0-2·Ö±ğ´ú±í±³¾°¡¢Ö¸ÕëºÍ¿Ì¶È
+// Êä³öÊÇ¿Ì¶ÈÖµ
 float MeterReader::reader_process(cv::Mat& img, cv::Mat& mask) {
 
     cv::Mat scale_mask = cv::Mat(mask.rows, mask.cols, CV_8UC1);
@@ -411,7 +411,7 @@ float MeterReader::reader_process(cv::Mat& img, cv::Mat& mask) {
     cv::waitKey(0);
 #endif
 
-    // å¯¹è¡¨ç›˜åˆ»åº¦è¦å…ˆåšè…èš€æ“ä½œ
+    // ¶Ô±íÅÌ¿Ì¶ÈÒªÏÈ×ö¸¯Ê´²Ù×÷
     cv::Mat kernel(5, 5, CV_8U, cv::Scalar(1));
     cv::erode(scale_mask, scale_mask, kernel);
 
@@ -420,25 +420,25 @@ float MeterReader::reader_process(cv::Mat& img, cv::Mat& mask) {
     cv::waitKey(0);
 #endif 
 
-    // æ ¹æ®åˆ†å‰²çš„åˆ»åº¦ï¼Œæ±‚åˆå§‹ç‚¹å’Œä¸­æ­¢ç‚¹
+    // ¸ù¾İ·Ö¸îµÄ¿Ì¶È£¬Çó³õÊ¼µãºÍÖĞÖ¹µã
     cv::Point2f scale_locations[2];
     getScaleLocation(scale_mask, scale_locations);
 
-    // æ±‚å‡ºè¡¨ç›˜çš„æŒ‡é’ˆä¸­å¿ƒç‚¹
+    // Çó³ö±íÅÌµÄÖ¸ÕëÖĞĞÄµã
     cv::Point2f center_location;
     // getCenterLocation(dial_mask, center_location);
     getCenterLocation(img, center_location);
 
-    // è·å–è¡¨ç›˜æŒ‡é’ˆçš„é¡¶ç‚¹
+    // »ñÈ¡±íÅÌÖ¸ÕëµÄ¶¥µã
     cv::Point2f pointer_locations[2];
     getPointerLocation(pointer_mask, center_location, pointer_locations);
 
-    // æ±‚è§£ä»èµ·å§‹ç‚¹åˆ°æŒ‡é’ˆçš„è§’åº¦
+    // Çó½â´ÓÆğÊ¼µãµ½Ö¸ÕëµÄ½Ç¶È
     float angle_ratio = getAngleRatio(scale_locations, pointer_locations[0], center_location);
-    // æ ¹æ®é‡ç¨‹å’Œè§’åº¦è®¡ç®—æœ€åçš„è¯»æ•°
+    // ¸ù¾İÁ¿³ÌºÍ½Ç¶È¼ÆËã×îºóµÄ¶ÁÊı
     float scale_value = getScaleValue(angle_ratio);
 
-    // å¯è§†åŒ–ï¼Œè‡ªèº«æµ‹è¯•ä½¿ç”¨
+    // ¿ÉÊÓ»¯£¬×ÔÉí²âÊÔÊ¹ÓÃ
 #ifdef IMG_TEST
     vis_for_test(img, scale_locations, pointer_locations, center_location, scale_value);
 #endif // IMG_TEST
@@ -446,7 +446,7 @@ float MeterReader::reader_process(cv::Mat& img, cv::Mat& mask) {
     return scale_value;
 }
 
-// è·å–è¯»æ•°ç»“æœ
+// »ñÈ¡¶ÁÊı½á¹û
 std::vector<float> MeterReader::multi_read_process(const std::vector<cv::Mat>& input_image, const std::vector<cv::Mat>& output)
 {
     int meter_num = input_image.size();
@@ -485,11 +485,11 @@ cv::Mat MeterReader::result_visualizer(const cv::Mat& bgr, const std::vector<Obj
         float result = scale_values[i_results];
 
         cv::Scalar color = cv::Scalar(237, 189, 101);
-        cv::rectangle(output_image, bounding_box, color);  // ç›®æ ‡æ¡†
+        cv::rectangle(output_image, bounding_box, color);  // Ä¿±ê¿ò
 
         std::string class_name = "Meter";
         cv::putText(output_image,
-            class_name + " : " + std::to_string(result),
+            class_name + " : " + std::to_string(result) + " Mpa",
             cv::Point2d(bounding_box.x, bounding_box.y - 5), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 2);
     }
 
