@@ -13,17 +13,17 @@ class MeterSegmentation {
 public:
     MeterSegmentation(const char* param, const char* bin);
     ~MeterSegmentation();
-    bool run(cv::Mat& img, ncnn::Mat& res);
+    bool run(const cv::Mat& img, ncnn::Mat& res);
     std::vector<cv::Mat> preprocess(const std::vector<cv::Mat>& input_images, std::vector<cv::Mat>& resize_images);
     std::vector<cv::Mat> cut_roi_img(const cv::Mat& bgr, const std::vector<Object>& objects);
     float LetterBoxImage(const cv::Mat& image, cv::Mat& out_image, const cv::Size& new_shape, const cv::Scalar& color);
 
 private:
     ncnn::Net meterSeg;
-    const float mean[3] = { 0.45734706f * 255.f, 0.43338275f * 255.f, 0.40058118f * 255.f };
-    const float std[3] = { 1 / 0.23965294 / 255.f, 1 / 0.23532275 / 255.f, 1 / 0.2398498 / 255.f };
-    bool process(cv::Mat& image, ncnn::Mat& input);
+    ncnn::Mat input, res;
 
+    const float mean[3] = { 0.485f * 255.f, 0.456f * 255.f, 0.406f * 255.f };
+    const float std[3] = { 1 / 0.229f / 255.f, 1 / 0.224f / 255.f, 1 / 0.225f / 255.f };
 };
 
 #endif

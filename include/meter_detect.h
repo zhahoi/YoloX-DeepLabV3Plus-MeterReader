@@ -47,7 +47,7 @@ public:
     void generate_grids_and_stride(const int target_w, const int target_h, std::vector<int>& strides, std::vector<GridAndStride>& grid_strides);
     void generate_yolox_proposals(std::vector<GridAndStride> grid_strides, const ncnn::Mat& feat_blob, float prob_threshold, std::vector<Object>& objects);
     cv::Mat draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects);
-    bool detect_objects(cv::Mat& image, std::vector<Object>& objects);
+    bool detect_objects(const cv::Mat& image, std::vector<Object>& objects);
 
 private:
     ncnn::Net yolox;

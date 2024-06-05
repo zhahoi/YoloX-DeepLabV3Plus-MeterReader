@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 #include "meter_detect.h"
+#include "meter_seg.h"
 
 #define SCALE_BEGINNING 0 // -0.1
 #define SCALE_END  0.1
