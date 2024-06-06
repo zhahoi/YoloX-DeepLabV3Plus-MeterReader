@@ -107,13 +107,12 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         cv::waitKey(0);
 #endif
        
-        // 这里发现如果进行不失真的resize结果可能会不准确，所以直接粗暴地进行resze了，原因可能是训练模型的时候就没有加灰条
-        cv::resize(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), 0, 0, cv::INTER_AREA);
+        // 直接进行resize
+        // cv::resize(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), 0, 0, cv::INTER_AREA);
         
-        // 需要对输入图像进行不失真的resize
-        // float scale = LetterBoxImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
-
-        // std::cout << "current scale: " << scale << std::endl;
+        // 对输入图像进行不失真的resize,加灰条
+        float scale = LetterBoxImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
+        std::cout << "current scale: " << scale << std::endl;
 
 #ifdef VISUALIZE
         cv::imshow("resize_image", resize_image);
