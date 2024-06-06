@@ -2,7 +2,7 @@
 #include "gpu.h"
 #include <iostream>
  
-// ÎªÁË·ÀÖ¹ÖØ¸´´´½¨
+// ä¸ºäº†é˜²æ­¢é‡å¤åˆ›å»º
 std::vector<cv::Mat> cut_images;
 cv::Mat resize_image;
 cv::Mat cut_image;
@@ -52,7 +52,7 @@ bool MeterSegmentation::run(const cv::Mat& img, ncnn::Mat& res)
     if (img.empty())
         return false;
 
-    // ½øĞĞÔ¤´¦Àí
+    // è¿›è¡Œé¢„å¤„ç†
     input = ncnn::Mat::from_pixels(img.data, ncnn::Mat::PIXEL_BGR2RGB, DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE);
     input.substract_mean_normalize(mean, std);
 
@@ -107,10 +107,10 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         cv::waitKey(0);
 #endif
        
-        // ÕâÀï·¢ÏÖÈç¹û½øĞĞ²»Ê§ÕæµÄresize½á¹û¿ÉÄÜ»á²»×¼È·£¬ËùÒÔÖ±½Ó´Ö±©µØ½øĞĞreszeÁË£¬Ô­Òò¿ÉÄÜÊÇÑµÁ·Ä£ĞÍµÄÊ±ºò¾ÍÃ»ÓĞ¼Ó»ÒÌõ
+        // è¿™é‡Œå‘ç°å¦‚æœè¿›è¡Œä¸å¤±çœŸçš„resizeç»“æœå¯èƒ½ä¼šä¸å‡†ç¡®ï¼Œæ‰€ä»¥ç›´æ¥ç²—æš´åœ°è¿›è¡Œreszeäº†ï¼ŒåŸå› å¯èƒ½æ˜¯è®­ç»ƒæ¨¡å‹çš„æ—¶å€™å°±æ²¡æœ‰åŠ ç°æ¡
         cv::resize(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), 0, 0, cv::INTER_AREA);
         
-        // ĞèÒª¶ÔÊäÈëÍ¼Ïñ½øĞĞ²»Ê§ÕæµÄresize
+        // éœ€è¦å¯¹è¾“å…¥å›¾åƒè¿›è¡Œä¸å¤±çœŸçš„resize
         // float scale = LetterBoxImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
 
         // std::cout << "current scale: " << scale << std::endl;
@@ -127,47 +127,36 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         std::cout << "Res shape: " << res.h << ", " << res.w << ", " << res.c << std::endl;
 
 #endif
-        cv::Mat mask(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE, CV_8UC1);
-        uchar* pMask = mask.data;
-
+        cv::Mat mask(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE, CV_8UC1, cv::Scalar(0, 0, 0));
+  
         const float* class0mask = res.channel(0); // background
         const float* class1mask = res.channel(1); // pointer
         const float* class2mask = res.channel(2); // scale
 
-        // Êä³öÒ»ÖÖÑÚÂëÍ¼£¬ÈÃ±³¾°ÊıÖµÎª0£¬Ö¸ÕëÊıÖµÎª1£¬¿Ì¶ÈÊıÖµÎª2
-        for (int i = 0; i < DEEPLABV3P_TARGET_SIZE * DEEPLABV3P_TARGET_SIZE; i++)
+        // è¾“å‡ºä¸€ç§æ©ç å›¾ï¼Œè®©èƒŒæ™¯æ•°å€¼ä¸º0ï¼ŒæŒ‡é’ˆæ•°å€¼ä¸º1ï¼Œåˆ»åº¦æ•°å€¼ä¸º2
+        for (int i = 0; i < DEEPLABV3P_TARGET_SIZE; i++)
         {
-            // 0: background 1£ºpointer 2: scale
-            // pMask[i] = class0mask[i] > class1mask[i] ? 0 : 1
-            if (class0mask[i] > class1mask[i])
+            for (int j = 0; j < DEEPLABV3P_TARGET_SIZE; j++)
             {
-                if (class0mask[i] > class2mask[i])
+                int num = i * DEEPLABV3P_TARGET_SIZE + j;
+                if ((class1mask[num] > class2mask[num]) && (class1mask[num] > class0mask[num]))
                 {
-                    pMask[i] = 0;  // ±³¾°
+                    mask.at<uchar>(i, j) = 1;
                 }
-                else
+            
+                if ((class2mask[num] > class1mask[num]) && (class2mask[num] > class0mask[num]))
                 {
-                    pMask[i] = 2;  // ¿Ì¶È
-                }
-            }
-            else
-            {
-                if (class1mask[i] > class2mask[i])
-                {
-                    pMask[i] = 1;  // Ö¸Õë
-                }
-                else
-                {
-                    pMask[i] = 2;  // ¿Ì¶È
+                    mask.at<uchar>(i, j) = 2;
                 }
             }
         }
+      
         
 #ifdef VISUALIZE
         std::cout << "Res shape: " << res.h << ", " << res.w << ", " << res.c << std::endl;
 #endif
         /*
-        // Ê¹ÓÃscaleÅĞ¶Ïµ±Ç°µÄÍ¼Æ¬´óĞ¡ÊÇ·ñ´óÓÚresizeºóµÄÍ¼Ïñ£¬È»ºóÔÙ½øĞĞ·µ»Ø
+        // ä½¿ç”¨scaleåˆ¤æ–­å½“å‰çš„å›¾ç‰‡å¤§å°æ˜¯å¦å¤§äºresizeåçš„å›¾åƒï¼Œç„¶åå†è¿›è¡Œè¿”å›
         cv::Rect roi_rect;
         cv::Mat mask_resize, mask_recover;
         int x_offset, y_offset;
@@ -176,7 +165,7 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
 
         std::cout << "max_size: " << max_size << std::endl;
 
-        if (scale >= 1)  // ËµÃ÷¼ì²âÍ¼Ïñ´óÓÚresizeºóµÄÍ¼Ïñ
+        if (scale >= 1)  // è¯´æ˜æ£€æµ‹å›¾åƒå¤§äºresizeåçš„å›¾åƒ
         {
             x_offset = (max_size - input_image.cols) / 2;
             y_offset = (max_size - input_image.rows) / 2;
@@ -194,7 +183,7 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
 
             mask_recover = mask_resize(roi_rect);
         }
-        else // ËµÃ÷¼ì²âÍ¼ÏñĞ¡ÓÚresizeºóµÄÍ¼Ïñ
+        else // è¯´æ˜æ£€æµ‹å›¾åƒå°äºresizeåçš„å›¾åƒ
         {
             x_offset = (DEEPLABV3P_TARGET_SIZE * scale - input_image.cols) / 2;
             y_offset = (DEEPLABV3P_TARGET_SIZE * scale - input_image.rows) / 2;
