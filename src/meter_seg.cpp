@@ -64,6 +64,33 @@ float MeterSegmentation::ResizeImage(const cv::Mat& image, cv::Mat& out_image, c
     return scale;
 }
 
+void MeterSegmentation::Softmax(ncnn::Mat& res)
+{
+    for (int i = 0; i < res.h; i++)
+    {
+        for (int j = 0; j < res.w; j++)
+        {
+            float max = -FLT_MAX;
+            for (int q = 0; q < res.c; q++)
+            {
+                max = std::max(max, res.channel(q).row(i)[j]);
+            }
+
+            float sum = 0.0f;
+            for (int q = 0; q < res.c; q++)
+            {
+                res.channel(q).row(i)[j] = exp(res.channel(q).row(i)[j] - max);
+                sum += res.channel(q).row(i)[j];
+            }
+
+            for (int q = 0; q < res.c; q++)
+            {
+                res.channel(q).row(i)[j] /= sum;
+            }
+        }
+    }
+}
+
 bool MeterSegmentation::run(const cv::Mat& img, ncnn::Mat& res)
 {
     if (img.empty())
@@ -139,6 +166,8 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
 
         ncnn::Mat res;
         run(resize_image, res);
+        // softmax
+        Softmax(res);
 
 #ifdef VISUALIZE
         std::cout << "Res shape: " << res.h << ", " << res.w << ", " << res.c << std::endl;
