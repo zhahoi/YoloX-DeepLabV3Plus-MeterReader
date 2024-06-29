@@ -16,7 +16,8 @@ public:
     bool run(const cv::Mat& img, ncnn::Mat& res);
     std::vector<cv::Mat> preprocess(const std::vector<cv::Mat>& input_images, std::vector<cv::Mat>& resize_images);
     std::vector<cv::Mat> cut_roi_img(const cv::Mat& bgr, const std::vector<Object>& objects);
-    float LetterBoxImage(const cv::Mat& image, cv::Mat& out_image, const cv::Size& new_shape, const cv::Scalar& color);
+    float LetterBoxImage(const cv::Mat& image, cv::Mat& out_image, const cv::Size& new_shape, const cv::Scalar& color); 
+    float ResizeImage(const cv::Mat& image, cv::Mat& out_image, const cv::Size& new_shape, const cv::Scalar& color); // 参考pytorch模型训练改写的c++代码
 
 private:
     ncnn::Net meterSeg;
