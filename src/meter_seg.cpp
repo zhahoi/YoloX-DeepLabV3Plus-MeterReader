@@ -47,6 +47,23 @@ float MeterSegmentation::LetterBoxImage(const cv::Mat& image, cv::Mat& out_image
     return 1.0f / r;
 }
 
+float MeterSegmentation::ResizeImage(const cv::Mat& image, cv::Mat& out_image, const cv::Size& new_shape, const cv::Scalar& color = cv::Scalar(128, 128, 128))
+{
+    cv::Size shape = image.size();
+    float scale = std::min(static_cast<float>(new_shape.height) / shape.height, static_cast<float>(new_shape.width) / shape.width);
+
+    int new_width = static_cast<int>(shape.width * scale);
+    int new_height = static_cast<int>(shape.height * scale);
+
+    cv::Mat resized_image;
+    cv::resize(image, resized_image, cv::Size(new_width, new_height), 0, 0, cv::INTER_CUBIC);
+
+    out_image = cv::Mat(new_shape, image.type(), color);
+    resized_image.copyTo(out_image(cv::Rect((new_shape.width - new_width) / 2, (new_shape.height - new_height) / 2, new_width, new_height)));
+
+    return scale;
+}
+
 bool MeterSegmentation::run(const cv::Mat& img, ncnn::Mat& res)
 {
     if (img.empty())
@@ -111,7 +128,8 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         // cv::resize(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), 0, 0, cv::INTER_AREA);
         
         // 对输入图像进行不失真的resize,加灰条
-        float scale = LetterBoxImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
+        // float scale = LetterBoxImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
+        float scale = ResizeImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
         std::cout << "current scale: " << scale << std::endl;
 
 #ifdef VISUALIZE
@@ -204,6 +222,10 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         outputs.push_back(mask);
         resize_images.push_back(resize_image);
 
+        mask.release();
+        input_image.release();
+        resize_image.release();
+        res.release();
     }
 
     return outputs;
