@@ -48,7 +48,6 @@ add_executable(
     src/meter_reader.cpp
     src/meter_readerv2.cpp
     src/meter_seg.cpp
-    src/SocketMatTransmissionClient.cpp
 )
 
 target_link_libraries(
