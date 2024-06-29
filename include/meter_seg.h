@@ -18,6 +18,7 @@ public:
     std::vector<cv::Mat> cut_roi_img(const cv::Mat& bgr, const std::vector<Object>& objects);
     float LetterBoxImage(const cv::Mat& image, cv::Mat& out_image, const cv::Size& new_shape, const cv::Scalar& color); 
     float ResizeImage(const cv::Mat& image, cv::Mat& out_image, const cv::Size& new_shape, const cv::Scalar& color); // 参考pytorch模型训练改写的c++代码
+    void Softmax(ncnn::Mat& res); // 用于对是对语义分割后的结果进行softmax（参考pytorch训练的预处理和后处理代码，确保二者的处理是一致的）
 
 private:
     ncnn::Net meterSeg;
