@@ -11,7 +11,7 @@ std::vector<cv::Mat> outputs;
 MeterSegmentation::MeterSegmentation(const char* param, const char* bin)
 {
     meterSeg.opt.use_vulkan_compute = false;
-    meterSeg.opt.use_bf16_storage = true;
+    meterSeg.opt.use_bf16_storage = false;
     meterSeg.load_param(param);
     meterSeg.load_model(bin);
 }
@@ -97,12 +97,15 @@ bool MeterSegmentation::run(const cv::Mat& img, ncnn::Mat& res)
         return false;
 
     // 进行预处理
-    input = ncnn::Mat::from_pixels(img.data, ncnn::Mat::PIXEL_BGR2RGB, DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE);
+    ncnn::Mat input = ncnn::Mat::from_pixels(img.data, ncnn::Mat::PIXEL_BGR2RGB, DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE);
     input.substract_mean_normalize(mean, std);
 
     ncnn::Extractor ex = meterSeg.create_extractor();
     ex.input("images", input);
     ex.extract("output", res);
+
+    // softmax
+    Softmax(res);
 
     return true;
 }
@@ -166,8 +169,6 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
 
         ncnn::Mat res;
         run(resize_image, res);
-        // softmax
-        Softmax(res);
 
 #ifdef VISUALIZE
         std::cout << "Res shape: " << res.h << ", " << res.w << ", " << res.c << std::endl;
@@ -201,52 +202,6 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
 #ifdef VISUALIZE
         std::cout << "Res shape: " << res.h << ", " << res.w << ", " << res.c << std::endl;
 #endif
-        /*
-        // 使用scale判断当前的图片大小是否大于resize后的图像，然后再进行返回
-        cv::Rect roi_rect;
-        cv::Mat mask_resize, mask_recover;
-        int x_offset, y_offset;
-
-        int max_size = (input_image.rows > input_image.cols) ? input_image.rows : input_image.cols;
-
-        std::cout << "max_size: " << max_size << std::endl;
-
-        if (scale >= 1)  // 说明检测图像大于resize后的图像
-        {
-            x_offset = (max_size - input_image.cols) / 2;
-            y_offset = (max_size - input_image.rows) / 2;
-
-            std::cout << "current offset: " << x_offset << ", " << y_offset << std::endl;
-            cv::resize(mask, mask_resize, cv::Size(max_size, max_size));
-
-            if (input_image.rows >= input_image.cols)
-                roi_rect.x = x_offset;
-                roi_rect.y = y_offset;
-                roi_rect.width = input_image.cols;
-                roi_rect.height = input_image.rows;
-
-            std::cout << "rect: " << roi_rect.x << ", " << roi_rect.y << ", " << roi_rect.width << ", " << roi_rect.height << std::endl;
-
-            mask_recover = mask_resize(roi_rect);
-        }
-        else // 说明检测图像小于resize后的图像
-        {
-            x_offset = (DEEPLABV3P_TARGET_SIZE * scale - input_image.cols) / 2;
-            y_offset = (DEEPLABV3P_TARGET_SIZE * scale - input_image.rows) / 2;
-
-            std::cout << "current offset: " << x_offset << ", " << y_offset << std::endl;
-
-            roi_rect.x = x_offset;
-            roi_rect.y = y_offset;
-            roi_rect.width = DEEPLABV3P_TARGET_SIZE * scale - x_offset;
-            roi_rect.height = DEEPLABV3P_TARGET_SIZE * scale - y_offset;
-
-            mask_recover = mask(roi_rect);
-        }
-
-        // cv::imshow("mask_recover", mask_recover);
-        // cv::waitKey(0);
-         */
        
         outputs.push_back(mask);
         resize_images.push_back(resize_image);
