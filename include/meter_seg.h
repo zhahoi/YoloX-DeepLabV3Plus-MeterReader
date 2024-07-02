@@ -22,10 +22,9 @@ public:
 
 private:
     ncnn::Net meterSeg;
-    ncnn::Mat input, res;
 
-    const float mean[3] = { 0.485f * 255.f, 0.456f * 255.f, 0.406f * 255.f };
-    const float std[3] = { 1 / 0.229f / 255.f, 1 / 0.224f / 255.f, 1 / 0.225f / 255.f };
+    const float mean[3] = { 0., 0., 0. };
+    const float std[3] = { 1 / 255.f, 1 / 255.f, 1 / 255.f };
 };
 
 #endif
