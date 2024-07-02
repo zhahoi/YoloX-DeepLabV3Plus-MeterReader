@@ -4,8 +4,6 @@
  
 // 为了防止重复创建
 std::vector<cv::Mat> cut_images;
-cv::Mat resize_image;
-cv::Mat cut_image;
 std::vector<cv::Mat> outputs;
 
 MeterSegmentation::MeterSegmentation(const char* param, const char* bin)
@@ -127,7 +125,7 @@ std::vector<cv::Mat> MeterSegmentation::cut_roi_img(const cv::Mat& bgr, const st
         fprintf_s(stderr, "%d = %.5f at %.2f %.2f %.2f x %.2f\n", obj.label, obj.prob,
             obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
 
-        cut_image = image(obj.rect);
+        cv::Mat cut_image = image(obj.rect);
         cut_images.push_back(cut_image);
 
 #ifdef VISUALIZE
@@ -158,6 +156,7 @@ std::vector<cv::Mat> MeterSegmentation::preprocess(const std::vector<cv::Mat>& i
         // cv::resize(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), 0, 0, cv::INTER_AREA);
         
         // 对输入图像进行不失真的resize,加灰条
+        cv::Mat resize_image;
         // float scale = LetterBoxImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
         float scale = ResizeImage(input_image, resize_image, cv::Size(DEEPLABV3P_TARGET_SIZE, DEEPLABV3P_TARGET_SIZE), cv::Scalar(128, 128, 128));
         std::cout << "current scale: " << scale << std::endl;
