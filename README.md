@@ -71,3 +71,6 @@
 
 [2024.07.02]更新：之前提到DeepLabV3-Plus输出的结果诡异地出错，其实一直也没解决，昨天去ncnn官方库下面搜issues发现也有其他人和我遇到同样的问题，因此可以断定应该不是我预处理与后处理的问题。因为DeepLabV3-Plus输出结果不稳定，所以我重新选择了另外的Unet模型用来分割指针仪表的表盘方便读数。我重新创建另一个仓库上传了使用Unet模型来分割指针仪表表盘的ncnn推理代码，同时验证了一下没有任何推理错误。如果你自己推理的时候发现了和我同样的问题，可以参考我新建的另一个仓库，希望可以帮助你解决语义分割结果偶发错误的问题。
 - [Unet_ncnn](https://github.com/zhahoi/Unet_ncnn.git)
+
+[2024.07.23]更新：为了满足实时性的要求，这一套算法重新使用NanodetPlus和MobilenetV3-LRASPP重新实现了一下，可以实现实时检测和读数。重新创建了一个代码仓库供大家参考。
+- [NanodetPlus-MobilenetV3-LRASPP-MeterReader]https://github.com/zhahoi/NanodetPlus-MobilenetV3-LRASPP-MeterReader
