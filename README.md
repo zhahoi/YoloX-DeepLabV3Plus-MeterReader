@@ -73,4 +73,4 @@
 - [Unet_ncnn](https://github.com/zhahoi/Unet_ncnn.git)
 
 [2024.07.23]更新：为了满足实时性的要求，这一套算法重新使用NanodetPlus和MobilenetV3-LRASPP重新实现了一下，可以实现实时检测和读数。重新创建了一个代码仓库供大家参考。
-- [NanodetPlus-MobilenetV3-LRASPP-MeterReader]https://github.com/zhahoi/NanodetPlus-MobilenetV3-LRASPP-MeterReader
+- [NanodetPlus-MobilenetV3-LRASPP-MeterReader](https://github.com/zhahoi/NanodetPlus-MobilenetV3-LRASPP-MeterReader)
