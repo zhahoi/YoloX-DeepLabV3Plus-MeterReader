@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <vector>
 
-#define YOLOX_NMS_THRESH  0.45 // nms threshold
+#define YOLOX_NMS_THRESH  0.30 // nms threshold
 #define YOLOX_CONF_THRESH 0.75 // threshold of bounding box prob
 #define YOLOX_TARGET_SIZE 640  // target image size after resize, might use 416 for small model
 
