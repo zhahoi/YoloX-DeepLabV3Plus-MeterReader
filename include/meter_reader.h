@@ -24,8 +24,8 @@ private:
     int thresholdByCategory(cv::Mat& src, cv::Mat& dst, int category);
     int thresholdByContour(cv::Mat& src, cv::Mat& dst, std::vector<cv::Point2f>& contour);
     int getScaleLocation(cv::Mat& dial_mask, cv::Point2f* locations);
-    // int getCenterLocation(cv::Mat& dial_mask, cv::Point2f& center_location);  // 求解表盘的中心点
-    int getCenterLocation(cv::Mat& img, cv::Point2f& center_location);  // 求解表盘的中心点
+    int getCenterLocation(cv::Mat& dial_mask, cv::Point2f& center_location);  // 姹傝В琛ㄧ洏鐨勪腑蹇冪偣
+    // int getCenterLocation(cv::Mat& img, cv::Point2f& center_location);  // 姹傝В琛ㄧ洏鐨勪腑蹇冪偣
     int getMinAreaRectPoints(cv::Mat& pointer_mask, cv::Point2f* Ps);
     int getPointerVertexIndex(cv::Point2f& center_location, cv::Point2f* Ps, int& vertex_index);
     int getPointerLocation(cv::Mat& pointer_mask, cv::Point2f& center_location, cv::Point2f* pointer_location);
