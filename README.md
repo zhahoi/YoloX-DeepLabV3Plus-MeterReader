@@ -74,3 +74,6 @@
 
 [2024.07.23]更新：为了满足实时性的要求，这一套算法重新使用NanodetPlus和MobilenetV3-LRASPP重新实现了一下，可以实现实时检测和读数。重新创建了一个代码仓库供大家参考。
 - [NanodetPlus-MobilenetV3-LRASPP-MeterReader](https://github.com/zhahoi/NanodetPlus-MobilenetV3-LRASPP-MeterReader)
+
+[2024.08.29]更新：为了获取更好的检测精度，重新设计了使用NanodetPlus和Yolov8Pose来进行仪表检测，可以实现实时检测和精确读数。以下仓库是我最满意的指针仪表读数的版本，希望可以供大家参考。
+- [Nanodet-YoloV8-Pose-MeterReader](https://github.com/zhahoi/Nanodet-YoloV8-Pose-MeterReader)
